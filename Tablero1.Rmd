@@ -1,0 +1,114 @@
+---
+title: "Carrera Luz 2022"
+output: 
+  flexdashboard::flex_dashboard:
+    theme:
+      bg: "#FFFFFF"
+      fg: "#000080" 
+      primary: "#000080"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(ggplot2)
+library(paqueteMET)
+library(dplyr)
+data("CarreraLuz22")
+data=CarreraLuz22
+nA= nrow(data)
+tiempo= (data$timerun/60)
+```
+
+## Column {.tabset data-width="550"}
+
+### Tiempos de Carrera
+
+```{r}
+ggplot(data, aes(x=categoria, y=timerun/60)) +
+  geom_point(color="blue", size=1)+
+  labs(y= "tiempo (min)", x= "categorias")+
+  coord_cartesian(ylim = c(0, 150))
+```
+
+### Hombres por categoría
+
+```{r}
+
+```
+
+### Mujeres por categoría
+
+```{r}
+
+```
+
+### Más información
+
+```{r}
+
+```
+
+## Column {data-width="300"}
+
+### Tiempo mujeres categoría abierta
+
+```{r}
+dataMA = subset(data, (data$sex=="Mujer" & data$categoria=="2. Abierta"))
+dMA=dataMA$timerun/60
+hist(dMA, xlim=c(30,120), ylim=c(0,80),las=1,
+     main= NULL,
+     xlab="tiempo (min)",
+     ylab = "frecuencia",
+     col ="#ee964b")
+```
+
+### Tiempo hombres categoría abierta
+
+```{r}
+dataHA = subset(data, (data$sex=="Hombre" & data$categoria=="2. Abierta"))
+dHA=dataHA$timerun/60
+hist(dHA, xlim=c(30,120),las=1,
+     main= NULL,
+     xlab="tiempo (min)",
+     ylab = "frecuencia",
+     col ="#ee964b")
+```
+
+## Column {data-width="150"}
+
+### Tiempo ganador
+```{r}
+tMin= round(min(tiempo),1)
+tM= cat(tMin, " min")
+valueBox(tM, icon = "fa-thumbs-up", color = "#13C929")
+```
+
+### Número de participantes
+```{r}
+n= cat(nA, "atletas")
+valueBox(n, color = "#13C929")
+```
+
+### Porcentaje mujeres
+```{r}
+mujeres= subset(data, data$sex=="Mujer")
+nMujeres= nrow(mujeres)
+nM= nMujeres/nA*100
+gauge(nM, min = 0, max = 100, symbol = '%', gaugeSectors(
+  success = c(38, 100), warning = c(36, 37), danger = c(0, 35)
+))
+```
+
+### Tiempo promedio de carrera
+```{r}
+tProm= round(mean(tiempo),2)
+tP= cat(tProm, " min")
+valueBox(tP, icon = "fa-thumbs-up", color = "#13C929")
+```
