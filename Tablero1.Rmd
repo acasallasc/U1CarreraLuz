@@ -20,19 +20,25 @@ library(readr)
 library(ggplot2)
 library(paqueteMET)
 library(dplyr)
+
+#variables globales
 data("CarreraLuz22")
 data=CarreraLuz22
 nA= nrow(data)
 tiempo= (data$timerun/60)
+CarreraLuz22M = subset(CarreraLuz22, CarreraLuz22$sex=="Hombre")
+CarreraLuz22F = subset(CarreraLuz22, CarreraLuz22$sex=="Mujer")
 ```
 
-## Column {.tabset data-width="550"}
+## Column {.tabset data-width="650"}
 
 ### Tiempos de Carrera
 
 ```{r}
+paleta6=c("#447270", "#6B9493", "#F6E271", "#F6B916", "#F69312", "#BC6C25")
 ggplot(data, aes(x=categoria, y=timerun/60)) +
-  geom_point(color="blue", size=1)+
+  geom_jitter(color="blue", size=1, alpha=0.9) +
+  aes(color=paleta6)+
   labs(y= "tiempo (min)", x= "categorias")+
   coord_cartesian(ylim = c(0, 150))
 ```
@@ -40,20 +46,31 @@ ggplot(data, aes(x=categoria, y=timerun/60)) +
 ### Hombres por categoría
 
 ```{r}
-
+ggplot(CarreraLuz22M, aes(x = categoria, y = timerun/60 )) +
+  geom_boxplot(aes(fill = categoria)) + 
+  labs(title = "", y= "tiempo - min", x= "categorías")+
+  scale_fill_brewer() +
+  theme(legend.position = "none")
 ```
 
 ### Mujeres por categoría
 
 ```{r}
-
+ggplot(CarreraLuz22F, aes(x = categoria, y = timerun/60 )) +
+  geom_boxplot(aes(fill = categoria)) + 
+  labs(title = "", y= "tiempo - min", x= "categorías")+
+  scale_fill_brewer() +
+  theme(legend.position = "none")
 ```
 
 ### Más información
 
-```{r}
-
+```{r, echo=FALSE, out.width="30%", fig.align = "center"}
+knitr::include_graphics("carrera1.png")
 ```
+**10.07 K** Participantes desde los 15 años en adelante.
+
+**Salida**: Hotel Intercontinental, calle 5, Carrera 6, carrera 4c, carrera1, carrera 4, calle de la escopeta, museo arqueológico la merced, bulevar del rio, puente Ortiz, av 2N, parque lineal rio Cali av2n, calle 25, parque lineal av1n, calle 13, carrera 1 calle 12, carrera 5, calle 10, gobernación del valle, edificio Aristi carrera 9, calle 9 plazoleta de san francisco, bulevar del rio, calle 8, carrera 4, carrera 3ª, parque del peñón, carrera 3, carrera 3ª oeste, calle 5 oeste, carrera 4, av Belalcázar, carrera 2ª oeste, librería nacional, carrera 1c, museo la tertulia, av Colombia, pepe ganga, carrera 3, carrera 2, carrera 3ª, av Colombia, carrera 4, meta hotel intercontinental. [juanchocorrelon.com](https://juanchocorrelon.com/intercontinental-10k-luz-2022/#10k)
 
 ## Column {data-width="300"}
 
@@ -81,7 +98,7 @@ hist(dHA, xlim=c(30,120),las=1,
      col ="#ee964b")
 ```
 
-## Column {data-width="150"}
+## Column {data-width="50"}
 
 ### Tiempo ganador
 ```{r}
@@ -111,4 +128,12 @@ gauge(nM, min = 0, max = 100, symbol = '%', gaugeSectors(
 tProm= round(mean(tiempo),2)
 tP= cat(tProm, " min")
 valueBox(tP, icon = "fa-thumbs-up", color = "#13C929")
+```
+
+### distancia  {.value-box}
+```{r}
+valueBox(value = paste(10.07,"Km"), #ud1$min, 
+         caption = "Distancia recorrida", 
+         icon = "fa-solod fa-person-walking-arrow-right", 
+         color = "#13C929")
 ```
